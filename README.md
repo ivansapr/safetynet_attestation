@@ -29,13 +29,13 @@ There are 2 ways to use this plugin, one that we manage the keys ourselves and t
    _Tabspace_ b. Go to APIs and services and select the option to enable APIs and services.
    _Tabspace_ c. Look for the Play Integrity API. Select it and choose Enable.
 
-##Manual
+#### Manual
 
-1.- Generate the private.pem `openssl genrsa -aes128 -out private.pem 2048`
-2.- Generate the public.pem `openssl rsa -in private.pem -pubout > public.pem`
-3.- Upload it to google, when uploading it a file with an .enc extension will be downloaded
-4.- Generate the key file with `openssl rsautl -decrypt -oaep -inkey private.pem -in file_path.enc -out api_keys.txt`
-5.- in the api_keys.txt file, there will be DECRYPTION_KEY and VERIFICATION_KEY, which you must add to your manifest as follows:
+1. Generate the private.pem `openssl genrsa -aes128 -out private.pem 2048`
+2. Generate the public.pem `openssl rsa -in private.pem -pubout > public.pem`
+3. Upload it to google, when uploading it a file with an .enc extension will be downloaded
+4. Generate the key file with `openssl rsautl -decrypt -oaep -inkey private.pem -in file_path.enc -out api_keys.txt`
+5. in the api_keys.txt file, there will be DECRYPTION_KEY and VERIFICATION_KEY, which you must add to your manifest as follows:
 
 ```xml
 <meta-data android:name="decryption_api_key"
@@ -45,7 +45,7 @@ There are 2 ways to use this plugin, one that we manage the keys ourselves and t
            android:value="yourapikey"/>
 ```
 
-##Automatic
+#### Automatic
 
 Create a service account within the Google Cloud project that is linked to your app. During this account creation process, you must grant your service account the Service Account User and Service Usage Consumer roles. Generate the OAUTH2 token with your application and pass it to the plugin.
 
