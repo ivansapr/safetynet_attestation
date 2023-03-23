@@ -3,11 +3,11 @@ import 'package:safetynet_attestation/models/jws_payload_model.dart';
 import 'safetynet_attestation_platform_interface.dart';
 
 class SafetynetAttestation {
-  Future<String?> getPlatformVersion() {
+  static Future<String?> getPlatformVersion() {
     return SafetynetAttestationPlatform.instance.getPlatformVersion();
   }
 
-  Future<JWSPayloadModel> playIntegrityApiPayload({
+  static Future<JWSPayloadModel> playIntegrityApiPayload({
     required int projectNumber,
     required String token,
     required String applicationId,
@@ -21,7 +21,7 @@ class SafetynetAttestation {
     );
   }
 
-  Future<JWSPayloadModel> playIntegrityApiManualPayload({
+  static Future<JWSPayloadModel> playIntegrityApiManualPayload({
     required int projectNumber,
     String keyType = "EC",
     String? nonce,
@@ -33,7 +33,8 @@ class SafetynetAttestation {
     );
   }
 
-  Future<GooglePlayServicesAvailability?> googlePlayServicesAvailability() {
+  static Future<GooglePlayServicesAvailability?>
+      googlePlayServicesAvailability() {
     return SafetynetAttestationPlatform.instance
         .googlePlayServicesAvailability();
   }

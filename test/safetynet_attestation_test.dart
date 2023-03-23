@@ -18,8 +18,11 @@ class MockSafetynetAttestationPlatform
   }
 
   @override
-  Future<JWSPayloadModel> playIntegrityApiManualPayload(
-      {required int projectNumber, String keyType = "EC"}) {
+  Future<JWSPayloadModel> playIntegrityApiManualPayload({
+    required int projectNumber,
+    String keyType = "EC",
+    String? nonce,
+  }) {
     // TODO: implement playIntegrityApiManualPayload
     throw UnimplementedError();
   }
@@ -45,11 +48,10 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    SafetynetAttestation safetynetAttestationPlugin = SafetynetAttestation();
     MockSafetynetAttestationPlatform fakePlatform =
         MockSafetynetAttestationPlatform();
     SafetynetAttestationPlatform.instance = fakePlatform;
 
-    expect(await safetynetAttestationPlugin.getPlatformVersion(), '42');
+    expect(await SafetynetAttestation.getPlatformVersion(), '42');
   });
 }

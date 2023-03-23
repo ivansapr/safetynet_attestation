@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     GooglePlayServicesAvailability? gmsAvailability;
     try {
-      gmsAvailability = await SafetynetAttestation().googlePlayServicesAvailability();
+      gmsAvailability = await SafetynetAttestation.googlePlayServicesAvailability();
     } on PlatformException {
       gmsAvailability = null;
     }
@@ -101,7 +101,7 @@ class _SafetyNetAttestationWidgetState extends State<SafetyNetAttestationWidget>
     String dialogTitle, dialogMessage;
     try {
       JWSPayloadModel res =
-          await SafetynetAttestation().playIntegrityApiManualPayload(projectNumber: 1);
+          await SafetynetAttestation.playIntegrityApiManualPayload(projectNumber: 1);
 
       // JWSPayloadModel res = await SafetynetAttestation()
       //     .playIntegrityApiPayload(projectNumber: 1, token: "adasdasdasdas");
