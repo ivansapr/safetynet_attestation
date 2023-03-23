@@ -11,21 +11,25 @@ class SafetynetAttestation {
     required int projectNumber,
     required String token,
     required String applicationId,
+    String? nonce,
   }) {
     return SafetynetAttestationPlatform.instance.playIntegrityApiPayload(
       projectNumber: projectNumber,
       token: token,
       applicationId: applicationId,
+      nonce: nonce,
     );
   }
 
   Future<JWSPayloadModel> playIntegrityApiManualPayload({
     required int projectNumber,
     String keyType = "EC",
+    String? nonce,
   }) {
     return SafetynetAttestationPlatform.instance.playIntegrityApiManualPayload(
       projectNumber: projectNumber,
       keyType: keyType,
+      nonce: nonce,
     );
   }
 

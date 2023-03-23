@@ -26,12 +26,14 @@ class MethodChannelSafetynetAttestation extends SafetynetAttestationPlatform {
     required int projectNumber,
     required String token,
     required String applicationId,
+    String? nonce,
   }) async {
     final String payload =
         await methodChannel.invokeMethod('requestPlayIntegrityApi', {
       "cloud_project_number": projectNumber,
       "token": token,
       "application_id": applicationId,
+      "nonce": nonce,
     });
 
     return JWSPayloadModel.fromJson(jsonDecode(payload));
@@ -43,10 +45,14 @@ class MethodChannelSafetynetAttestation extends SafetynetAttestationPlatform {
   Future<JWSPayloadModel> playIntegrityApiManualPayload({
     required int projectNumber,
     String keyType = "EC",
+    String? nonce,
   }) async {
-    final String payload = await methodChannel.invokeMethod(
-        'requestPlayIntegrityApiManual',
-        {"cloud_project_number": projectNumber, "ec_key_type": keyType});
+    final String payload =
+        await methodChannel.invokeMethod('requestPlayIntegrityApiManual', {
+      "cloud_project_number": projectNumber,
+      "ec_key_type": keyType,
+      "nonce": nonce,
+    });
 
     return JWSPayloadModel.fromJson(jsonDecode(payload));
   }

@@ -25,10 +25,12 @@ class MockSafetynetAttestationPlatform
   }
 
   @override
-  Future<JWSPayloadModel> playIntegrityApiPayload(
-      {required int projectNumber,
-      required String token,
-      required applicationId}) {
+  Future<JWSPayloadModel> playIntegrityApiPayload({
+    required int projectNumber,
+    required String token,
+    required applicationId,
+    String? nonce,
+  }) {
     // TODO: implement playIntegrityApiPayload
     throw UnimplementedError();
   }
