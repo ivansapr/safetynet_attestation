@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,14 +101,15 @@ class _SafetyNetAttestationWidgetState extends State<SafetyNetAttestationWidget>
   void requestSafetyNetAttestation() async {
     String dialogTitle, dialogMessage;
     try {
-      JWSPayloadModel res =
-          await SafetynetAttestation.playIntegrityApiManualPayload(projectNumber: 1);
+      // JWSPayloadModel res =
+      //     await SafetynetAttestation.playIntegrityApiManualPayload(projectNumber: 1);
 
-      // JWSPayloadModel res = await SafetynetAttestation()
-      //     .playIntegrityApiPayload(projectNumber: 1, token: "adasdasdasdas");
+      final nonce = base64.encode(utf8.encode('nonce+nonce+nonce'));
+      final res = await SafetynetAttestation
+          .playIntegrityApiToken(projectNumber: 498550196467, nonce: nonce);
 
       dialogTitle = 'SafetyNet Attestation Payload';
-      dialogMessage = res.accountDetails.appLicensingVerdict;
+      dialogMessage = res;
     } catch (e) {
       dialogTitle = 'ERROR - SafetyNet Attestation Payload';
 

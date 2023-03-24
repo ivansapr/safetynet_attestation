@@ -21,6 +21,16 @@ class SafetynetAttestation {
     );
   }
 
+  static Future<String> playIntegrityApiToken({
+    required int projectNumber,
+    String? nonce,
+  }) {
+    return SafetynetAttestationPlatform.instance.playIntegrityApiToken(
+      projectNumber: projectNumber,
+      nonce: nonce,
+    );
+  }
+
   static Future<JWSPayloadModel> playIntegrityApiManualPayload({
     required int projectNumber,
     String keyType = "EC",
@@ -33,9 +43,7 @@ class SafetynetAttestation {
     );
   }
 
-  static Future<GooglePlayServicesAvailability?>
-      googlePlayServicesAvailability() {
-    return SafetynetAttestationPlatform.instance
-        .googlePlayServicesAvailability();
+  static Future<GooglePlayServicesAvailability?> googlePlayServicesAvailability() {
+    return SafetynetAttestationPlatform.instance.googlePlayServicesAvailability();
   }
 }

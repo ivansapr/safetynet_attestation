@@ -37,6 +37,12 @@ class MockSafetynetAttestationPlatform
     // TODO: implement playIntegrityApiPayload
     throw UnimplementedError();
   }
+
+  @override
+  Future<String> playIntegrityApiToken({required int projectNumber, String? nonce}) {
+    // TODO: implement playIntegrityApiToken
+    throw UnimplementedError();
+  }
 }
 
 void main() {

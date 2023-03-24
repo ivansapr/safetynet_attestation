@@ -9,8 +9,7 @@ abstract class SafetynetAttestationPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static SafetynetAttestationPlatform _instance =
-      MethodChannelSafetynetAttestation();
+  static SafetynetAttestationPlatform _instance = MethodChannelSafetynetAttestation();
 
   /// The default instance of [SafetynetAttestationPlatform] to use.
   ///
@@ -35,8 +34,14 @@ abstract class SafetynetAttestationPlatform extends PlatformInterface {
     required String applicationId,
     String? nonce,
   }) {
-    throw UnimplementedError(
-        'playIntegrityApiPayload() has not been implemented.');
+    throw UnimplementedError('playIntegrityApiPayload() has not been implemented.');
+  }
+
+  Future<String> playIntegrityApiToken({
+    required int projectNumber,
+    String? nonce,
+  }) {
+    throw UnimplementedError('playIntegrityApiToken() has not been implemented.');
   }
 
   Future<JWSPayloadModel> playIntegrityApiManualPayload({
@@ -44,13 +49,11 @@ abstract class SafetynetAttestationPlatform extends PlatformInterface {
     String keyType = "EC",
     String? nonce,
   }) {
-    throw UnimplementedError(
-        'playIntegrityApiManualPayload() has not been implemented.');
+    throw UnimplementedError('playIntegrityApiManualPayload() has not been implemented.');
   }
 
   Future<GooglePlayServicesAvailability?> googlePlayServicesAvailability() {
-    throw UnimplementedError(
-        'googlePlayServicesAvailability() has not been implemented.');
+    throw UnimplementedError('googlePlayServicesAvailability() has not been implemented.');
   }
 }
 

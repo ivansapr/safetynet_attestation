@@ -83,6 +83,9 @@ class SafetynetAttestationPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             "requestPlayIntegrityApiManual" -> {
                 requestPlayIntegrityApiManual(call, result)
             }
+            "requestPlayIntegrityApiToken" -> {
+                requestPlayIntegrityApiToken(call, result)
+            }
 
             else -> {
                 result.notImplemented()
@@ -103,7 +106,8 @@ class SafetynetAttestationPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         } else if (!call.hasArgument("cloud_project_number")) {
             result.error("Error", "Please include the cloud_project_number in the request", null)
             return
-        } else if (!call.hasArgument("token")) {
+        }
+        else if (!call.hasArgument("token")) {
             result.error("Error", "Please include the token in the request", null)
             return
         } else if (!call.hasArgument("application_id")) {
@@ -111,7 +115,7 @@ class SafetynetAttestationPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             return
         }
 
-        val nonce: String = call.argument("nonce") as String?
+        val nonce: String? = call.argument("nonce") as String?
         val cloudProjectNumber: Long = call.argument("cloud_project_number") as Long? ?: 0
         val tokenBearer: String = call.argument("token") as String? ?: ""
         val applicationId: String = call.argument("application_id") as String? ?: ""
@@ -136,15 +140,61 @@ class SafetynetAttestationPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         val integrityTokenResponse: Task<IntegrityTokenResponse> =
                 integrityManager.requestIntegrityToken(integrityResponseBuilder.build())
 
-        integrityTokenResponse.addOnSuccessListener
-        { integrityTokenResponse1: IntegrityTokenResponse ->
-            val integrityToken = integrityTokenResponse1.token()
-            //log.d("API", integrityToken)
-            this.requestPlayIntegrity(integrityToken, tokenBearer, applicationId, result)
+        integrityTokenResponse.addOnSuccessListener { integrityTokenResponse: IntegrityTokenResponse ->
+            val integrityToken = integrityTokenResponse.token()
+            result.success(integrityToken)
         }
 
-        integrityTokenResponse.addOnFailureListener
-        { e ->
+        integrityTokenResponse.addOnFailureListener { e ->
+            e.printStackTrace()
+            if (e is ApiException) {
+                result.error("Error",
+                        CommonStatusCodes.getStatusCodeString(e.statusCode) + " : " +
+                                e.message, null)
+            } else {
+                result.error("Error", e.message, null)
+            }
+        }
+    }
+
+    private fun requestPlayIntegrityApiToken(call: MethodCall, result: Result) {
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity!!)
+                != ConnectionResult.SUCCESS) {
+            result.error("Error", "Google Play Services are not available, please call the checkGooglePlayServicesAvailability() method to understand why", null)
+            return
+        } else if (!call.hasArgument("cloud_project_number")) {
+            result.error("Error", "Please include the cloud_project_number in the request", null)
+            return
+        }
+
+        val nonce: String? = call.argument("nonce") as String?
+        val cloudProjectNumber: Long = call.argument("cloud_project_number") as Long? ?: 0
+
+        // Create an instance of a manager.
+        val integrityManager =
+                IntegrityManagerFactory.create(activity)
+
+        val integrityResponseBuilder = IntegrityTokenRequest.builder()
+                .setCloudProjectNumber(cloudProjectNumber)
+        if (nonce != null) {
+            if (!checkNonce(nonce)) {
+                result.error("Error", "The nonce should be larger than the 16 bytes", null)
+                return
+            }
+            integrityResponseBuilder.setNonce(nonce)
+        }
+
+
+        // Request the integrity token by providing a nonce.
+        val integrityTokenResponse: Task<IntegrityTokenResponse> =
+                integrityManager.requestIntegrityToken(integrityResponseBuilder.build())
+
+        integrityTokenResponse.addOnSuccessListener { integrityTokenResponse: IntegrityTokenResponse ->
+            val integrityToken = integrityTokenResponse.token()
+            result.success(integrityToken)
+        }
+
+        integrityTokenResponse.addOnFailureListener { e ->
             e.printStackTrace()
             if (e is ApiException) {
                 result.error("Error",
@@ -172,7 +222,7 @@ class SafetynetAttestationPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             return
         }
         // Check nonce
-        val nonce: String = call.argument("nonce") as String?
+        val nonce: String? = call.argument("nonce") as String?
         val cloudProjectNumber: Long = call.argument("cloud_project_number") as Long? ?: 0
         val ecKeyType: String = call.argument("ec_key_type") as String? ?: "EC"
         if (nonce == null || nonce.length < 16) {
@@ -316,11 +366,6 @@ class SafetynetAttestationPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                     }
                 }
             })
-            //val response = client.newCall(request).execute()
-            //result = response.body?.string()
-            //log.d("URL", "response")
-
-
         } catch (err: Error) {
             result.error("Api request error", "Error when executing get request: " + err.localizedMessage, null)
             return
@@ -329,12 +374,10 @@ class SafetynetAttestationPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     }
 
     private fun checkDecryptionKeyInManifest(): Boolean {
-        //log.d("API", "checkDecryptionKeyInManifest")
         return !TextUtils.isEmpty(getDecryptionKey())
     }
 
     private fun checkVerificationKeyInManifest(): Boolean {
-        //log.d("API", "checkVerificationKeyInManifest")
         return !TextUtils.isEmpty(getVerificationKey())
     }
 

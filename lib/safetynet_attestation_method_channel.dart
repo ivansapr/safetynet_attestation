@@ -14,8 +14,7 @@ class MethodChannelSafetynetAttestation extends SafetynetAttestationPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
@@ -28,8 +27,7 @@ class MethodChannelSafetynetAttestation extends SafetynetAttestationPlatform {
     required String applicationId,
     String? nonce,
   }) async {
-    final String payload =
-        await methodChannel.invokeMethod('requestPlayIntegrityApi', {
+    final String payload = await methodChannel.invokeMethod('requestPlayIntegrityApi', {
       "cloud_project_number": projectNumber,
       "token": token,
       "application_id": applicationId,
@@ -37,6 +35,19 @@ class MethodChannelSafetynetAttestation extends SafetynetAttestationPlatform {
     });
 
     return JWSPayloadModel.fromJson(jsonDecode(payload));
+  }
+
+  @override
+  Future<String> playIntegrityApiToken({
+    required int projectNumber,
+    String? nonce,
+  }) async {
+    final token = await methodChannel.invokeMethod<String>('requestPlayIntegrityApiToken', {
+      "cloud_project_number": projectNumber,
+      "nonce": nonce,
+    });
+
+    return token!;
   }
 
   /// Request the Safety Net Attestation with a String nonce
@@ -47,8 +58,7 @@ class MethodChannelSafetynetAttestation extends SafetynetAttestationPlatform {
     String keyType = "EC",
     String? nonce,
   }) async {
-    final String payload =
-        await methodChannel.invokeMethod('requestPlayIntegrityApiManual', {
+    final String payload = await methodChannel.invokeMethod('requestPlayIntegrityApiManual', {
       "cloud_project_number": projectNumber,
       "ec_key_type": keyType,
       "nonce": nonce,
@@ -59,10 +69,8 @@ class MethodChannelSafetynetAttestation extends SafetynetAttestationPlatform {
 
   //Check if you have the google play service enabled
   @override
-  Future<GooglePlayServicesAvailability?>
-      googlePlayServicesAvailability() async {
-    final String result =
-        await methodChannel.invokeMethod('checkGooglePlayServicesAvailability');
+  Future<GooglePlayServicesAvailability?> googlePlayServicesAvailability() async {
+    final String result = await methodChannel.invokeMethod('checkGooglePlayServicesAvailability');
 
     switch (result) {
       case 'success':
