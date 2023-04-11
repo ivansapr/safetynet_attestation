@@ -168,14 +168,14 @@ class SafetynetAttestationPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         }
 
         val nonce: String? = call.argument("nonce") as String?
-        val cloudProjectNumber: Int = call.argument("cloud_project_number") as Int? ?: 0
+        val cloudProjectNumber: Long = call.argument("cloud_project_number") as Long? ?: 0
 
         // Create an instance of a manager.
         val integrityManager =
                 IntegrityManagerFactory.create(activity)
 
         val integrityResponseBuilder = IntegrityTokenRequest.builder()
-                .setCloudProjectNumber(cloudProjectNumber.toLong())
+                .setCloudProjectNumber(cloudProjectNumber)
         if (nonce != null) {
             if (!checkNonce(nonce)) {
                 result.error("Error", "The nonce should be larger than the 16 bytes", null)
